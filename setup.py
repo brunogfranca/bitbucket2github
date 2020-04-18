@@ -19,5 +19,10 @@ setup(
     zip_safe=False,
     entry_points={
         'console_scripts': ['bitbucket2github=bitbucket2github.cli:migrate'],
-    }
+    },
+    install_requires=[
+        'click==7.1.1',
+        'requests==2.23.0',
+        'PyGithub==1.47'
+    ]
 )
