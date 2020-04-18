@@ -11,6 +11,7 @@ setup(
     version='1.0',
     description='Simple tool to migrate your Bitbucket repositories to GitHub',
     long_description=readme(),
+    long_description_content_type='text/markdown',
     url='https://github.com/brunogfranca/bitbucket2github',
     author='Bruno França',
     author_email='bgfranca@gmail.com',
