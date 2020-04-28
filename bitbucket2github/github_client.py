@@ -14,46 +14,53 @@ class GitHubClient:
         self.organization = organization
         self.team = team
 
+    def __create_user_repo(self, repo_name):
+        user = self.github.get_user()
+
+        with suppress(Exception):
+            repo_check = user.get_repo(repo_name)
+            if repo_check is not None:
+                logger.info(f'Repository {repo_name} already exists for user')
+                return
+
+        logger.info(f'Creating {repo_name} repository')
+        return user.create_repo(
+            repo_data['name'],
+            private=repo_data['is_private']
+        )
+
+    def __create_org_repo(self, repo_name):
+        org = self.github.get_organization(self.organization)
+
+        with suppress(Exception):
+            repo_check = org.get_repo(repo_name)
+            if repo_check is not None:
+                logger.info(f'Repository {repo_name} already exists in organization {self.organization}')
+                return
+
+        team_id = None
+        if self.team is not None:
+            for team in org.get_teams():
+                if team.name.lower() == self.team.lower():
+                    team_id = team.id
+                    break
+
+        logger.info(f'Creating {repo_name} repository in organization {self.organization}')
+        return org.create_repo(
+            repo_data['name'],
+            private=repo_data['is_private'],
+            team_id=team_id
+        )
+
     def import_repo(self, repo_data, source_username, source_password):
         repo_name = repo_data["name"]
         if self.organization is None:
-
-            user = self.github.get_user()
-
-            with suppress(Exception):
-                repo_check = user.get_repo(repo_name)
-                if repo_check is not None:
-                    logger.info(f'Repository {repo_name} already exists for user')
-                    return
-
-            logger.info(f'Creating {repo_name} repository')
-            repo = user.create_repo(
-                repo_data['name'],
-                private=repo_data['is_private']
-            )
+            repo = self.__create_user_repo(repo_name)
         else:
-            # Do org import
-            org = self.github.get_organization(self.organization)
+            repo = self.__create_org_repo(repo_name)
 
-            with suppress(Exception):
-                repo_check = org.get_repo(repo_name)
-                if repo_check is not None:
-                    logger.info(f'Repository {repo_name} already exists in organization {self.organization}')
-                    return
-
-            team_id = None
-            if self.team is not None:
-                for team in org.get_teams():
-                    if team.name.lower() == self.team.lower():
-                        team_id = team.id
-                        break
-
-            logger.info(f'Creating {repo_name} repository in organization {self.organization}')
-            repo = org.create_repo(
-                repo_data['name'],
-                private=repo_data['is_private'],
-                team_id=team_id
-            )
+        if not repo:
+            return
 
         logging.info(f'Migrating {repo_name} from Bitbucket')
         repo.create_source_import(
