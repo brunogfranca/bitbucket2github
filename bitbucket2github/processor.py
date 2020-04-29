@@ -7,9 +7,11 @@ class Bitbucket2GitHub:
         self,
         gh_token, gh_organization, gh_team,
         bb_username, bb_password, bb_organization=None,
+        repos_to_migrate=None
     ):
         self._setup_github(gh_token, gh_organization, gh_team)
         self._setup_bitbucket(bb_username, bb_password, bb_organization)
+        self.repos_to_migrate = repos_to_migrate
 
     def _setup_bitbucket(self, username, password, organization):
         self.bitbucket_username = username
@@ -29,6 +31,7 @@ class Bitbucket2GitHub:
 
     def migrate(self):
         repos = self.bitbucket.get_repositories()
+        repos_to_migrate = self.repos_to_migrate
         for repo in repos:
             repo_data = {
                 'name': repo['name'],
@@ -36,8 +39,9 @@ class Bitbucket2GitHub:
                 'is_private': repo['is_private'],
                 'url': repo['links']['clone'][0]['href']
             }
-            self.github.import_repo(
-                repo_data,
-                self.bitbucket_username,
-                self.bitbucket_password
-            )
+            if (not repos_to_migrate or repo_data['name'] in repos_to_migrate):
+                self.github.import_repo(
+                    repo_data,
+                    self.bitbucket_username,
+                    self.bitbucket_password
+                )

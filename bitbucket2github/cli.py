@@ -42,16 +42,27 @@ def setup_logger(verbose):
     required=True
 )
 @click.option('--bitbucket-organization', help='Your Bitbucket Organization')
+@click.option(
+    '--repos-to-migrate',
+    multiple=True,
+    help='''
+    Repositories you want to migrate. \n
+    If not passed, the command will migrate all your repositories. \n
+    You can pass this parameter as many times as needed \n
+    e.g. --repos-to-migrate=REPO1 --repos-to-migrate=REPO2
+    '''
+)
 @click.option('-v', '--verbose', count=True)
 def migrate(
     github_token, github_organization, github_team,
     bitbucket_username, bitbucket_password, bitbucket_organization,
-    verbose
+    repos_to_migrate, verbose
 ):
     setup_logger(verbose)
     b2g = Bitbucket2GitHub(
         github_token, github_organization, github_team,
-        bitbucket_username, bitbucket_password, bitbucket_organization
+        bitbucket_username, bitbucket_password, bitbucket_organization,
+        repos_to_migrate
     )
     b2g.migrate()
 
