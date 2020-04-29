@@ -22,12 +22,14 @@ def setup_logger(verbose):
 
 
 @click.command()
-@click.option('--github-username', help='Your Github Username', required=True)
-@click.option('--github-password', help='Your Github Password', required=True)
+@click.option('--github-token', help='Your Github Token', required=True)
 @click.option(
-    '--github-owner',
-    help='The owner of the new repository',
-    required=True
+    '--github-organization',
+    help='The organization to import to instead of the user',
+)
+@click.option(
+    '--github-team',
+    help='The organization team to give the repository to'
 )
 @click.option(
     '--bitbucket-username',
@@ -42,13 +44,13 @@ def setup_logger(verbose):
 @click.option('--bitbucket-organization', help='Your Bitbucket Organization')
 @click.option('-v', '--verbose', count=True)
 def migrate(
-    github_username, github_password, github_owner,
+    github_token, github_organization, github_team,
     bitbucket_username, bitbucket_password, bitbucket_organization,
     verbose
 ):
     setup_logger(verbose)
     b2g = Bitbucket2GitHub(
-        github_username, github_password, github_owner,
+        github_token, github_organization, github_team,
         bitbucket_username, bitbucket_password, bitbucket_organization
     )
     b2g.migrate()

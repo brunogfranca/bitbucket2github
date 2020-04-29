@@ -6,7 +6,7 @@ Bitbucket2GitHub is a simple tool to migrate your Bitbucket repositories to GitH
 
 ```
 $ pip install bitbucket2github
-$ bitbucket2github --github-username=USER --github-password=SECRET --github-owner=OWNER --bitbucket-username=USER --bitbucket-password=SECRET --bitbucket-organization=ORG -v
+$ bitbucket2github --github-token=TOKEN --github-organization=ORGANIZATION --github-team=TEAM --bitbucket-username=USER --bitbucket-password=SECRET --bitbucket-organization=ORG -v
 ```
 
 ```
@@ -14,9 +14,9 @@ $ bitbucket2github --help
 Usage: bitbucket2github [OPTIONS]
 
 Options:
-  --github-username TEXT         Your Github Username  [required]
-  --github-password TEXT         Your Github Password  [required]
-  --github-owner TEXT            The owner of the new repository  [required]
+  --github-token TEXT            Your Github Personal access token  [required]
+  --github-organization TEXT     The Github organization to import the repository to
+  --github-team TEXT             The Github team under the organization
   --bitbucket-username TEXT      Your Bitbucket Username  [required]
   --bitbucket-password TEXT      Your Bitbucket Password  [required]
   --bitbucket-organization TEXT  Your Bitbucket Organization

@@ -5,10 +5,10 @@ from .github_client import GitHubClient
 class Bitbucket2GitHub:
     def __init__(
         self,
-        gh_username, gh_password, gh_owner,
+        gh_token, gh_organization, gh_team,
         bb_username, bb_password, bb_organization=None,
     ):
-        self._setup_github(gh_username, gh_password, gh_owner)
+        self._setup_github(gh_token, gh_organization, gh_team)
         self._setup_bitbucket(bb_username, bb_password, bb_organization)
 
     def _setup_bitbucket(self, username, password, organization):
@@ -20,11 +20,11 @@ class Bitbucket2GitHub:
             organization=organization
         )
 
-    def _setup_github(self, username, password, owner):
+    def _setup_github(self, token, organization, team):
         self.github = GitHubClient(
-            username=username,
-            password=password,
-            owner=owner
+            token=token,
+            organization=organization,
+            team=team
         )
 
     def migrate(self):
