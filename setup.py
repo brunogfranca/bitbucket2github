@@ -8,7 +8,7 @@ def readme():
 
 setup(
     name='bitbucket2github',
-    version='1.1',
+    version='1.2',
     description='Simple tool to migrate your Bitbucket repositories to GitHub',
     long_description=readme(),
     long_description_content_type='text/markdown',
