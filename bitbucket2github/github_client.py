@@ -14,7 +14,8 @@ class GitHubClient:
         self.organization = organization
         self.team = team
 
-    def __create_user_repo(self, repo_name):
+    def __create_user_repo(self, repo_data):
+        repo_name = repo_data["name"]
         user = self.github.get_user()
 
         with suppress(Exception):
@@ -29,7 +30,8 @@ class GitHubClient:
             private=repo_data['is_private']
         )
 
-    def __create_org_repo(self, repo_name):
+    def __create_org_repo(self, repo_data):
+        repo_name = repo_data["name"]
         org = self.github.get_organization(self.organization)
 
         with suppress(Exception):
@@ -55,9 +57,9 @@ class GitHubClient:
     def import_repo(self, repo_data, source_username, source_password):
         repo_name = repo_data["name"]
         if self.organization is None:
-            repo = self.__create_user_repo(repo_name)
+            repo = self.__create_user_repo(repo_data)
         else:
-            repo = self.__create_org_repo(repo_name)
+            repo = self.__create_org_repo(repo_data)
 
         if not repo:
             return
