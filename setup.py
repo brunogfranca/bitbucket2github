@@ -23,7 +23,7 @@ setup(
     },
     install_requires=[
         'click==7.1.1',
-        'requests==2.23.0',
+        'requests==2.31.0',
         'PyGithub==1.47'
     ]
 )
